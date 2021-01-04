@@ -1,6 +1,8 @@
 package com.cos.blog.config;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -21,4 +23,25 @@ public class DB {
 		}
 		return null;
 	}
+	
+	public static void close(Connection conn, PreparedStatement pstmt) {
+		try {
+			conn.close();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+	}
+
+	public static void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
+		try {
+			conn.close();
+			pstmt.close();
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	
 }

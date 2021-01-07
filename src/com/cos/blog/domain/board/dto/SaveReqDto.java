@@ -1,5 +1,6 @@
 package com.cos.blog.domain.board.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data

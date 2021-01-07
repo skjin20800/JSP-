@@ -1,9 +1,7 @@
 package com.cos.blog.config;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Spliterator;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,9 +10,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 
-public class CharConfig implements Filter{
+// 이제부터는 내부에서의 모든 요청은 RequestDispatcher로 해야한다. 
+// 그래야 다시 필터를 타지 않는다.
+
+public class ForbiddenUrlConfig implements Filter{
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
@@ -22,19 +22,13 @@ public class CharConfig implements Filter{
 		HttpServletRequest request = (HttpServletRequest) req;
     	HttpServletResponse response = (HttpServletResponse) resp;
 
-     	request.setCharacterEncoding("utf-8");
-		response.setContentType("text/html; charset=utf-8");
-
-//		String username = request.getParameter("username");
-//		System.out.println("username : "+username);
-//		
-//		PrintWriter out = response.getWriter();
-//		out.println("안녕");
-//		out.flush();
-
-			chain.doFilter(request, response);	
-
-		
+    	if(request.getRequestURI().equals("/blog/") || request.getRequestURI().equals("/blog/index.jsp")) {
+    		chain.doFilter(request, response);
+    	}else {
+    		PrintWriter out = response.getWriter();
+    		out.print("잘못된 접근입니다.");
+    		out.flush();
+    	}
 		
 	}
 }

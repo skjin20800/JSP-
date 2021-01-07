@@ -1,7 +1,9 @@
 package com.cos.blog.web;
 
 import java.io.IOException;
+import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.cos.blog.domain.board.Board;
 import com.cos.blog.domain.board.dto.SaveReqDto;
 import com.cos.blog.domain.user.User;
 import com.cos.blog.service.BoardrService;
@@ -38,11 +41,13 @@ public class BoardController extends HttpServlet {
 		HttpSession session = request.getSession();
 		if(cmd.equals("saveForm")) {
 			User principal = (User) session.getAttribute("principal");
-			if(principal != null) {
-				response.sendRedirect("board/saveForm.jsp");
-			}else {
-				response.sendRedirect("user/loginForm.jsp");
-			}	
+			if (principal != null) {
+				RequestDispatcher dis = request.getRequestDispatcher("board/saveForm.jsp");
+				dis.forward(request, response);
+			} else {
+				RequestDispatcher dis = request.getRequestDispatcher("user/loginForm.jsp");
+				dis.forward(request, response);
+			}
 		}else if(cmd.equals("save")) {
 			int userId = Integer.parseInt(request.getParameter("userId"));
 			String title = request.getParameter("title");
@@ -54,10 +59,45 @@ public class BoardController extends HttpServlet {
 			dto.setContent(content);
 			int result = boardService.글쓰기(dto);
 			if(result == 1) { //정상
-				response.sendRedirect("index.jsp");
+				RequestDispatcher dis = request.getRequestDispatcher("index.jsp");
+				dis.forward(request, response);
 			}else {
 				Script.back(response, "글쓰기실패");
 			}
+		}else if(cmd.equals("list")) {
+			int page = Integer.parseInt(request.getParameter("page"));  // 최초 : 0, Next : 1, Next: 2
+			boolean isStart = false;
+			boolean isEnd = false;
+			List<Board> boards = boardService.목록보기(page);
+			int boardAll = boardService.전체게시글수();
+			int remainBoard = boardAll%4;
+			int remainPage = 0;
+					if (remainBoard >0) {
+						remainPage = 1;
+					}
+			int lastPage = (((boardAll/4) + remainPage)-1);
+			
+			if(page == 0) {
+				isStart = true;
+			}else if(page == lastPage) {
+				isEnd = true;
+			}
+			
+			request.setAttribute("boards", boards);
+			request.setAttribute("isStart", isStart);
+			request.setAttribute("isEnd", isEnd);
+			RequestDispatcher dis = request.getRequestDispatcher("board/list.jsp");
+			dis.forward(request, response);
+		
+		}else if(cmd.equals("detail")) {
+			int id = Integer.parseInt(request.getParameter("id"));
+			Board detail = boardService.상세정보보기(id);
+			
+			request.setAttribute("detail", detail);
+			RequestDispatcher dis = request.getRequestDispatcher("board/listDetail.jsp");
+			dis.forward(request, response);
+		}else if(cmd.equals("back")) {
+			Script.back(response, "뒤로가기");
 		}
 		
 	}

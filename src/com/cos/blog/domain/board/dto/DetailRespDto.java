@@ -8,6 +8,7 @@ public class DetailRespDto {
 	private String title; //board 테이블
 	private String content; //board 테이블
 	private int readCount; //board 테이블
+	private int userId; //user 아이디
 	private String username; //user테이블
 
 	// 루시 필터 적용해보기

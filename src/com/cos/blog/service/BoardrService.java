@@ -6,6 +6,7 @@ import com.cos.blog.domain.board.Board;
 import com.cos.blog.domain.board.BoardDao;
 import com.cos.blog.domain.board.dto.DetailRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
+import com.cos.blog.domain.board.dto.UpdateReqDto;
 
 public class BoardrService {
 	private BoardDao boardDao;
@@ -27,8 +28,21 @@ public class BoardrService {
 	
 	public DetailRespDto 글상세보기(int id) {
 		// 조회수 업데이트치기
-		boardDao.insertReadCount(id);
-		return boardDao.findById(id);
+		int result = boardDao.insertReadCount(id);
+		
+		if(result ==1) {
+			System.out.println("result : "+ result);
+			return boardDao.findById(id);	
+		}else {
+			return null;
+		}	
 	}
 	
+	public int 글수정(UpdateReqDto dto) {
+		return boardDao.update(dto);
+	}
+	
+	public int 글삭제(int id) {
+		return boardDao.deleteById(id);
+	}
 }

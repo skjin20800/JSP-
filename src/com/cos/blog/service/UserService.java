@@ -4,7 +4,7 @@ import com.cos.blog.domain.user.User;
 import com.cos.blog.domain.user.UserDao;
 import com.cos.blog.domain.user.dto.JoinReqDto;
 import com.cos.blog.domain.user.dto.LoginReqDto;
-import com.cos.blog.domain.user.dto.UpdateReqDto;
+import com.cos.blog.domain.user.dto.UpdateReqDtoUser;
 
 // 회원가입, 회원수정, 로그인, 아이디중복체크
 public class UserService {
@@ -25,7 +25,7 @@ public class UserService {
 		return userDao.findByUsernameAndPassword(dto);
 	}
 
-	public int 회원수정(UpdateReqDto dto) {
+	public int 회원수정(UpdateReqDtoUser dto) {
 
 		return -1;
 	}

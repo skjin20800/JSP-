@@ -5,8 +5,6 @@
 
 <div id="mcontainer">
 
-
-
 <div class="m-2">
 		<form class="form-inline d-flex justify-content-end" action="/blog/board">
 			<input type="hidden" name="cmd" value="search" />

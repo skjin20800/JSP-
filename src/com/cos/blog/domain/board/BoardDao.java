@@ -12,6 +12,45 @@ import com.cos.blog.domain.board.dto.SaveReqDto;
 import com.cos.blog.domain.board.dto.UpdateReqDto;
 
 public class BoardDao {
+	
+	public List<Board> search(String keyword, int page) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT * ");
+		sb.append("FROM board ");
+		sb.append("WHERE title LIKE ? ");
+		sb.append("ORDER BY id DESC LIMIT ?, 4");
+		
+		String sql = sb.toString();
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet  rs = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%"+keyword+"%"); 
+			pstmt.setInt(2, page*4);
+			rs = pstmt.executeQuery();
+	
+			List<Board> boardList = new ArrayList();
+			
+			while(rs.next()) {
+				Board board = Board.builder()
+						.id(rs.getInt("id"))
+						.title(rs.getString("title"))
+						.content(rs.getString("content"))
+						.userId(rs.getInt("userId"))
+						.createDate(rs.getTimestamp("createDate"))
+						.build();
+				boardList.add(board);
+			}
+			System.out.println("Dao성공");
+			return boardList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally { // 무조건 실행
+			DB.close(conn, pstmt);
+		}
+		return null;
+	}
 
 	public int update(UpdateReqDto dto) {
 		String sql = "UPDATE board SET title = ?, content = ? WHERE id = ?";
@@ -86,6 +125,7 @@ public class BoardDao {
 		}
 		return null;
 	}
+
 	
 	public int findAllPage() { // 
 		String sql = "SELECT count(*) pageAll FROM  board";
@@ -100,7 +140,31 @@ public class BoardDao {
 				return pageAll;
 			}
 		} catch (Exception e) {
-			System.out.println("Dao실패");
+			e.printStackTrace();
+		} finally { // 무조건 실행
+			DB.close(conn, pstmt);
+		}
+		return 0;
+	}
+	public int searchAllPage(String keyword) { // 
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT count(*) pageAll ");
+		sb.append("FROM board ");
+		sb.append("WHERE title LIKE ?");
+		
+		String sql = sb.toString();
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,"%"+keyword+"%");
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				int pageAll = rs.getInt("pageAll");
+				return pageAll;
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally { // 무조건 실행
 			DB.close(conn, pstmt);

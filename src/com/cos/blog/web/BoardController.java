@@ -140,10 +140,38 @@ public class BoardController extends HttpServlet {
 			if(result == 1) {
 				// 고민해보세요. 왜 RequestDispatcher 안썻는지... 한번 써보세요. detail.jsp 호출
 				response.sendRedirect("/blog/board?cmd=detail&id="+id);
-				
 			}else {
-				Script.back(response,"글 수정에 실패하였습니다.");
+				Script.back(response,"글 수정에 실패하였습니다.");		
 			}
+		}else if(cmd.equals("search")) {
+			String keyword = request.getParameter("keyword");
+		
+				int page = Integer.parseInt(request.getParameter("page")); // 최초 : 0, Next : 1, Next: 2
+				List<Board> searchBoards = boardService.검색(keyword,  page);
+
+				int boardAll = boardService.검색게시글수(keyword);
+				int remainBoard = boardAll % 4;
+				int remainPage = 0;
+				if (remainBoard > 0) {
+					remainPage = 1;				
+				}
+				int lastPage = (((boardAll / 4) + remainPage) - 1);
+				double currentPosition = (double) page / (lastPage) * 100;
+				
+				if(keyword.equals("")) {
+					Script.back(response, "검색어를 입력해주세요");
+					System.out.println("검색실패");
+			
+				}else {
+					request.setAttribute("currentPosition", currentPosition);
+					request.setAttribute("boards", searchBoards);
+					request.setAttribute("lastPage", lastPage);
+					RequestDispatcher dis = request.getRequestDispatcher("board/searchList.jsp");
+					dis.forward(request, response);
+				}
+			
+			
+	
 		}
 	}
 }

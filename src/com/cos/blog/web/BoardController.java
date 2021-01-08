@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.cos.blog.domain.board.Board;
+import com.cos.blog.domain.board.dto.DetailRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
 import com.cos.blog.domain.user.User;
 import com.cos.blog.service.BoardrService;
@@ -66,8 +67,7 @@ public class BoardController extends HttpServlet {
 			}
 		}else if(cmd.equals("list")) {
 			int page = Integer.parseInt(request.getParameter("page"));  // 최초 : 0, Next : 1, Next: 2
-			boolean isStart = false;
-			boolean isEnd = false;
+	
 			List<Board> boards = boardService.목록보기(page);
 			int boardAll = boardService.전체게시글수();
 			int remainBoard = boardAll%4;
@@ -76,24 +76,19 @@ public class BoardController extends HttpServlet {
 						remainPage = 1;
 					}
 			int lastPage = (((boardAll/4) + remainPage)-1);
-			
-			if(page == 0) {
-				isStart = true;
-			}else if(page == lastPage) {
-				isEnd = true;
-			}
-			
+			double currentPosition = (double)page/(lastPage)*100;
+		
+			request.setAttribute("currentPosition", currentPosition);
 			request.setAttribute("boards", boards);
-			request.setAttribute("isStart", isStart);
-			request.setAttribute("isEnd", isEnd);
+			request.setAttribute("lastPage", lastPage);
 			RequestDispatcher dis = request.getRequestDispatcher("board/list.jsp");
 			dis.forward(request, response);
 		
 		}else if(cmd.equals("detail")) {
 			int id = Integer.parseInt(request.getParameter("id"));
-			Board detail = boardService.상세정보보기(id);
-			
-			request.setAttribute("detail", detail);
+			DetailRespDto dto = boardService.글상세보기(id); // board테이블+user테이블 = 조인된 데이터!!
+			request.setAttribute("dto", dto);
+			//System.out.println("DetailRespDto : "+dto);
 			RequestDispatcher dis = request.getRequestDispatcher("board/listDetail.jsp");
 			dis.forward(request, response);
 		}else if(cmd.equals("back")) {

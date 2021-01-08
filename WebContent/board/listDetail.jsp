@@ -3,44 +3,66 @@
 
 <%@ include file="../layout/header.jsp" %>
 
-<div id="mcontainer">
-
-
-
-	<div class="progress col-md-12 m-2">
-		<div class="progress-bar" style="width: 70%"></div>
+<div class="container">
+	<br />
+	<br />
+	<h6 class="m-2">
+		작성자 : <i>${dto.username}</i> 조회수 : <i>${dto.readCount}</i>
+	</h6>
+	<br />
+	<h3 class="m-2">
+		<b>${dto.title}</b>
+	</h3>
+	<hr />
+	<div class="form-group">
+		<div class="m-2">${dto.content}</div>
 	</div>
 
-		<div class="card col-md-12 m-2">
-			<div class="card-body">
-			<h4 class="card-title">${detail.id}</h4>
-				<h4 class="card-title">${detail.title}</h4>
-				<h4 class="card-title">${detail.content}</h4>
-				<h4 class="card-title">${detail.userId}</h4>
-				<h4 class="card-title">${detail.createDate}</h4>
+	<hr />
+
+	<!-- 댓글 박스 -->
+	<div class="row bootstrap snippets">
+		<div class="col-md-12">
+			<div class="comment-wrapper">
+				<div class="panel panel-info">
+					<div class="panel-heading m-2"><b>Comment</b></div>
+					<div class="panel-body">
+						<textarea id="reply__write__form" class="form-control" placeholder="write a comment..." rows="2"></textarea>
+						<br>
+						<button onclick="#" class="btn btn-primary pull-right">댓글쓰기</button>
+						<div class="clearfix"></div>
+						<hr />
+
+						<!-- 댓글 리스트 시작-->
+						<ul id="reply__list" class="media-list">
+
+								<!-- 댓글 아이템 -->
+								<li id="reply-1" class="media">		
+									<div class="media-body">
+										<strong class="text-primary">홍길동</strong>
+										<p>
+											댓글입니다.
+										</p>
+									</div>
+									<div class="m-2">
+
+										<i onclick="#" class="material-icons">delete</i>
+
+									</div>
+								</li>
+
+						</ul>
+						<!-- 댓글 리스트 끝-->
+					</div>
+				</div>
 			</div>
+
 		</div>
-
-	<br />
-	<form action="/blog/board?cmd=back" method="POST">
-	<ul class="pagination justify-content-center">
-		<li class="page-item disabled">
-			<button type="submit" class="btn btn-primary">뒤로가기</button></li>
-		<li class="page-item"><a class="page-link" href="#">Next</a></li>
-	</ul>
-	</form>
-
-
-
- <div class="container">
-
+	</div>
+	<!-- 댓글 박스 끝 -->
 </div>
-</div>
-<script>
 
-</script>
 </body>
 </html>
-
 
 

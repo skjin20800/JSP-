@@ -33,6 +33,16 @@
 		<filter-name>forbiddenUrlConfig</filter-name>
 		<url-pattern>*.jsp</url-pattern>
 	</filter-mapping>
+	
+	<filter>
+		<filter-name>XssFilter</filter-name>
+		<filter-class>com.cos.blog.config.XssFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>XssFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
 
 
 </web-app>

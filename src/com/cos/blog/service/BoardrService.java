@@ -42,6 +42,7 @@ public class BoardrService {
 	public List<Board> 검색(String keyword, int page) {
 		return boardDao.search(keyword, page);
 	}
+	
 	public int 검색게시글수(String keyword) {
 		return boardDao.searchAllPage(keyword);
 	}

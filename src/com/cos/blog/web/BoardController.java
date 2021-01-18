@@ -17,8 +17,10 @@ import com.cos.blog.domain.board.dto.CommonRespDto;
 import com.cos.blog.domain.board.dto.DetailRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
 import com.cos.blog.domain.board.dto.UpdateReqDto;
+import com.cos.blog.domain.reply.Reply;
 import com.cos.blog.domain.user.User;
 import com.cos.blog.service.BoardrService;
+import com.cos.blog.service.ReplyService;
 import com.cos.blog.util.Script;
 import com.google.gson.Gson;
 
@@ -46,6 +48,8 @@ public class BoardController extends HttpServlet {
 
 		String cmd = request.getParameter("cmd");
 		BoardrService boardService = new BoardrService();
+		ReplyService replyService = new ReplyService();
+		
 		// http://localhost:8080/blog/board?cmd=saveForm
 		HttpSession session = request.getSession();
 		if (cmd.equals("saveForm")) {
@@ -95,8 +99,9 @@ public class BoardController extends HttpServlet {
 		} else if (cmd.equals("detail")) {
 			int id = Integer.parseInt(request.getParameter("id"));
 			DetailRespDto dto = boardService.글상세보기(id); // board테이블+user테이블 = 조인된 데이터!!
+			List<Reply> replys = replyService.글목록보기(id);
 			request.setAttribute("dto", dto);
-			// System.out.println("DetailRespDto : "+dto);
+			request.setAttribute("replys", replys);
 			RequestDispatcher dis = request.getRequestDispatcher("board/listDetail.jsp");
 			dis.forward(request, response);
 		} else if (cmd.equals("back")) {
@@ -158,18 +163,11 @@ public class BoardController extends HttpServlet {
 				int lastPage = (((boardAll / 4) + remainPage) - 1);
 				double currentPosition = (double) page / (lastPage) * 100;
 				
-				if(keyword.equals("")) {
-					Script.back(response, "검색어를 입력해주세요");
-					System.out.println("검색실패");
-			
-				}else {
 					request.setAttribute("currentPosition", currentPosition);
 					request.setAttribute("boards", searchBoards);
 					request.setAttribute("lastPage", lastPage);
-					RequestDispatcher dis = request.getRequestDispatcher("board/searchList.jsp");
+					RequestDispatcher dis = request.getRequestDispatcher("board/list.jsp");
 					dis.forward(request, response);
-				}
-			
 			
 	
 		}

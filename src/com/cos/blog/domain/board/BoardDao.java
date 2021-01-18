@@ -12,7 +12,6 @@ import com.cos.blog.domain.board.dto.SaveReqDto;
 import com.cos.blog.domain.board.dto.UpdateReqDto;
 
 public class BoardDao {
-	
 	public List<Board> search(String keyword, int page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT * ");
@@ -42,7 +41,6 @@ public class BoardDao {
 						.build();
 				boardList.add(board);
 			}
-			System.out.println("Dao성공");
 			return boardList;
 		} catch (Exception e) {
 			e.printStackTrace();

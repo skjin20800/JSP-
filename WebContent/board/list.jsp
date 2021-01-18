@@ -6,7 +6,7 @@
 <div id="mcontainer">
 
 <div class="m-2">
-		<form class="form-inline d-flex justify-content-end" action="/blog/board?cmd=search&page=0">
+		<form class="form-inline d-flex justify-content-end" action="/blog/board">
 			<input type="hidden" name="cmd" value="search" />
 			<input type="hidden" name="page" value="0" />
 			
@@ -31,13 +31,26 @@
 </c:forEach>
  
 	<br />
+	
 	<ul class="pagination justify-content-center">
+	
 	<c:choose>
-	<c:when test="${ 0 == param.page}">
-	<li class="page-item disabled"  ><a class="page-link" href="#" >Previous</a></li>
-	</c:when>
-	<c:otherwise>
-	<li class="page-item"><a class="page-link" href="/blog/board?cmd=list&page=${param.page-1}">Previous</a></li>
+			<c:when test="${empty param.keyword}">
+				<c:set var ="pagePrev" value="/blog/board?cmd=list&page=${param.page-1 }"></c:set>
+				<c:set var="pageNext" value="/blog/board?cmd=list&page=${param.page+1}"/>
+			</c:when>
+			<c:otherwise>
+				<c:set var="pagePrev" value="/blog/board?cmd=search&page=${param.page-1}&keyword=${param.keyword}"/>
+				<c:set var="pageNext" value="/blog/board?cmd=search&page=${param.page+1}&keyword=${param.keyword}"/>
+			</c:otherwise>
+		</c:choose>
+	
+	<c:choose>
+			<c:when test="${ 0 == param.page}">
+				<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+			</c:when>
+			<c:otherwise>
+	<li class="page-item"><a class="page-link" href="${pageScope.pagePrev}">Previous</a></li>
 	</c:otherwise>
 	</c:choose>
 	
@@ -46,7 +59,7 @@
 	<li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
 	</c:when>
 	<c:otherwise>
-	<li class="page-item"><a class="page-link" href="/blog/board?cmd=list&page=${param.page+1}">Next</a></li>
+	<li class="page-item"><a class="page-link" href="${pageScope.pageNext}">Next</a></li>
 	</c:otherwise>
 	</c:choose>
 	</ul>
